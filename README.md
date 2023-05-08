@@ -71,12 +71,13 @@ Diseño Responsive
 
 Detalles técnicos
 
-Plugins
+## Plugins
 
 - Laravel Breeze - https://github.com/laravel/breeze (Minimal Laravel authentication scaffolding with Blade, Vue, or React + Tailwind.)
 - Vue3 (Composition API)
 
-Extra Plugins
+## Extra Plugins
+	
 - FontAwesome
 - Sweetalert2 
 - Tailwind
