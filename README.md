@@ -64,3 +64,23 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+Características
+
+Diseño Responsive
+
+Detalles técnicos
+
+Plugins
+
+- Laravel Breeze - https://github.com/laravel/breeze (Minimal Laravel authentication scaffolding with Blade, Vue, or React + Tailwind.)
+- Vue3 (Composition API)
+
+Extra Plugins
+- FontAwesome
+- Sweetalert2 
+- Tailwind
+- ChartJS (Vue Package)
+- DataTable (datatables.net-vue3 Package)
+
+
