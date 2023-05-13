@@ -12,16 +12,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-		\App\Models\User::factory(10)->create();		
-		\App\Models\Servicio::factory(10)->create();
-        \App\Models\Red::factory(10)->create();
-		\App\Models\Motivo::factory(10)->create();
-		\App\Models\EstadoReclamacion::factory(10)->create();
-		\App\Models\Reclamacion::factory(30)->create();
+		$this->call(EstadoReclamacionSeeder::class);
+        $this->call(MotivoReclamacionSeeder::class);
+        $this->call(ServicioSeeder::class);
+        $this->call(RedSeeder::class);
 
+		//\App\Models\Servicio::factory(10)->create();
+        //\App\Models\Red::factory(10)->create();
+		//\App\Models\Motivo::factory(10)->create();		
+        //\App\Models\EstadoReclamacion::factory(10)->create();        
+		\App\Models\User::factory(10)->create();      
+        \App\Models\Reclamacion::factory(30)->create();
+        
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',3
         //     'email' => 'test@example.com',
         // ]);
+
     }
 }

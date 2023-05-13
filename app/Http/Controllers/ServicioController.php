@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Servicio;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ServicioController extends Controller
 {
@@ -12,7 +13,12 @@ class ServicioController extends Controller
      */
     public function index()
     {
-        //
+        $servicios = Servicio::all();
+        $test = "testString";
+        //dd($);
+        return Inertia::render('Servicios/Index',[          
+            'servicios' => $servicios
+        ]);
     }
 
     /**
@@ -20,7 +26,7 @@ class ServicioController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Servicios/Create');
     }
 
     /**
@@ -28,7 +34,14 @@ class ServicioController extends Controller
      */
     public function store(Request $request)
     {
-        //
+         $request->validate([
+            'nombre' => 'required|max:100',
+            'nombre_a_mostrar' => 'required|max:100'
+        ]);
+        //dd("Test");
+        $servicio = new Servicio($request->input());
+        $servicio->save();
+        return redirect('servicio');
     }
 
     /**
@@ -44,7 +57,11 @@ class ServicioController extends Controller
      */
     public function edit(Servicio $servicio)
     {
-        //
+        $test = "testString";        
+        return Inertia::render('Servicios/Edit',[
+            'servicio' => $servicio,
+            'test' => $test
+        ]);
     }
 
     /**
@@ -52,7 +69,12 @@ class ServicioController extends Controller
      */
     public function update(Request $request, Servicio $servicio)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|max:100',
+            'nombre_a_mostrar' => 'required|max:100'
+        ]);
+        $servicio->update($request->all());
+        return redirect('servicio');
     }
 
     /**
@@ -60,6 +82,7 @@ class ServicioController extends Controller
      */
     public function destroy(Servicio $servicio)
     {
-        //
+        $servicio->delete();
+        return redirect('servicio');
     }
 }

@@ -46,7 +46,6 @@ chartData.value = {
 //******* Lifecycle Hooks *********//
 onMounted(() => {
   console.log("Component was mounted: ",props.data);
-  //el.value // <div>
 })
 
 </script>
@@ -56,7 +55,7 @@ onMounted(() => {
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Grafica</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Graficas</h2>
         </template>
 
         <div class="py-12">

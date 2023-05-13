@@ -10,7 +10,7 @@ import SelectInput from '@/Components/SelectInput.vue';
 import WarningButton from '@/Components/WarningButton.vue';
 import SecondaryButton from '@/Components/PrimaryButton.vue';
 import Modal from '@/Components/Modal.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { nextTick,ref,onMounted } from 'vue';
 import Swal from 'sweetalert2';
 import VueTailwindPagination from '@ocrv/vue-tailwind-pagination';
@@ -94,7 +94,7 @@ const deleteReclamacion = (id,name) => {
             buttonsStyling: true
         });
         alerta.fire({
-            title: 'Estas seguro de eliminar '+name+'?',
+            title: 'Estas seguro de eliminar la reclamación: '+name+'?',
             icon: 'question', 
             showCancelButton: true,
             confirmButtonText: '<i class="fa-solid fa-check"><i> Si, eliminar',
@@ -110,7 +110,6 @@ const deleteReclamacion = (id,name) => {
 //******* Lifecycle Hooks *********//
 onMounted(() => {
   console.log("Component was mounted: ",props.reclamaciones.data);
-  //el.value // <div>
 })
 
 
@@ -126,14 +125,24 @@ onMounted(() => {
         </template>
 
         <div class="py-12">
-            <div class="bg-white grid v-screen place-items-center">
-                <div class="mt-3 mb-3 flex">                    
-                    <PrimaryButton @click="$event => openModal(1)" class="px-4 py-2 bg-green-800 text-white border rounded-md font-semibold text-xs">
-                        <i class="fa-solid fa-plus-circle"></i> Crear Reclamación
-                   </PrimaryButton>                   
+            <div class="mx-auto sm:px-6 lg:px-8">            
+                <div class="px-6 py-6 bg-white overflow-hidden shadow-sm sm:rounded-lg text-gray-800">
+                    <div class="mt-3 mb-3 flex">
+                        <Link 
+                            :href="route('reclamaciones.create')" 
+                            :class="'px-4 py-2 bg-green-800 text-white border rounded-md font-semibold text-xs'"
+                        >
+                            <i class="fa-solid fa-plus-circle"></i> Crear Reclamación
+                        </Link>                 
+                    </div>
+                    <div class="mt-3 mb-3 flex"> 
+                        <PrimaryButton @click="$event => openModal(1)" class="px-4 py-2 bg-green-800 text-white border rounded-md font-semibold text-xs">
+                            <i class="fa-solid fa-plus-circle"></i> Crear Reclamación
+                       </PrimaryButton>                   
+                    </div>
                 </div>
-                <div class="bg-white grid v-screen place-items-center overflow-x-auto">
-                    <table class="table-auto border border-gray-400">
+                <div class="px-6 py-6 bg-white overflow-hidden shadow-sm sm:rounded-lg text-gray-800">
+                    <table class="table-auto border border-gray-400 w-full">
                     <thead>
                         <tr class="bg-gray-100">
                             <th class="px-2 py-2">#</th>
@@ -157,7 +166,7 @@ onMounted(() => {
                                     <i class="fa-solid fa-edit"></i>
                                 </WarningButton>
                             </td>               
-                            <td class="border border-gray-400 px-4 py-4">
+                            <td class="border border-gray-400 px-2 py-2">
                                 <DangerButton @click="$event => deleteReclamacion(rec.id,rec.code)">
                                     <i class="fa-solid fa-trash"></i> 
                                 </DangerButton>
@@ -166,14 +175,13 @@ onMounted(() => {
                     </tbody>
                     </table>
                 </div>
-                <div class="bg-white grid v-screen place-items-center">
-                
-                <VueTailwindPagination                    
-                    :current="reclamaciones.currentPage" 
-                    :total="reclamaciones.total"      
-                    :per-page="reclamaciones.data.length"
-                    @page-changed="$event => onPageClick($event)"
-                ></VueTailwindPagination>                
+                <div class="bg-white grid v-screen place-items-center">                
+                    <VueTailwindPagination                    
+                        :current="reclamaciones.currentPage" 
+                        :total="reclamaciones.total"      
+                        :per-page="reclamaciones.data.length"
+                        @page-changed="$event => onPageClick($event)"
+                    ></VueTailwindPagination>                
                 </div>                
             </div>
         </div>

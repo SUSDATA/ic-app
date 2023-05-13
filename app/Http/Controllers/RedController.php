@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Red;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class RedController extends Controller
 {
@@ -12,7 +13,12 @@ class RedController extends Controller
      */
     public function index()
     {
-        //
+        $redes = Red::all();
+        $test = "testString";
+        //dd($);
+        return Inertia::render('Redes/Index',[          
+            'redes' => $redes
+        ]);
     }
 
     /**
@@ -20,7 +26,7 @@ class RedController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Redes/Create');
     }
 
     /**
@@ -28,7 +34,14 @@ class RedController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|max:100',
+            'nombre_a_mostrar' => 'required|max:100'
+        ]);
+        //dd("Test");
+        $red = new Red($request->input());
+        $red->save();
+        return redirect('red');
     }
 
     /**
@@ -44,7 +57,12 @@ class RedController extends Controller
      */
     public function edit(Red $red)
     {
-        //
+        $test = "testString";        
+        return Inertia::render('Redes/Edit',[
+            'red' => $red,
+            'test' => $test
+        ]);
+
     }
 
     /**
@@ -52,7 +70,12 @@ class RedController extends Controller
      */
     public function update(Request $request, Red $red)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|max:100',
+            'nombre_a_mostrar' => 'required|max:100'
+        ]);
+        $red->update($request->all());
+        return redirect('red');
     }
 
     /**
@@ -60,6 +83,7 @@ class RedController extends Controller
      */
     public function destroy(Red $red)
     {
-        //
+        $red->delete();
+        return redirect('red');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EstadoReclamacion;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class EstadoReclamacionController extends Controller
 {
@@ -12,7 +13,12 @@ class EstadoReclamacionController extends Controller
      */
     public function index()
     {
-        //
+        $estados = EstadoReclamacion::all();
+        $test = "testString";
+        //dd($motivos);
+        return Inertia::render('Reclamaciones/Estados/Index',[          
+            'estados' => $estados
+        ]);
     }
 
     /**
@@ -20,7 +26,7 @@ class EstadoReclamacionController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Reclamaciones/Estados/Create');
     }
 
     /**
@@ -28,7 +34,14 @@ class EstadoReclamacionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|max:100',
+            'nombre_a_mostrar' => 'required|max:100'
+        ]);
+        //dd("Test");
+        $estado = new EstadoReclamacion($request->input());
+        $estado->save();
+        return redirect('estadoReclamacion');
     }
 
     /**
@@ -44,7 +57,11 @@ class EstadoReclamacionController extends Controller
      */
     public function edit(EstadoReclamacion $estadoReclamacion)
     {
-        //
+        $test = "testString";        
+        return Inertia::render('Reclamaciones/Estados/Edit',[
+            'estado' => $estadoReclamacion,
+            'test' => $test
+        ]);
     }
 
     /**
@@ -52,7 +69,12 @@ class EstadoReclamacionController extends Controller
      */
     public function update(Request $request, EstadoReclamacion $estadoReclamacion)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|max:100',
+            'nombre_a_mostrar' => 'required|max:100'
+        ]);
+        $estadoReclamacion->update($request->all());
+        return redirect('estadoReclamacion');
     }
 
     /**
@@ -60,6 +82,7 @@ class EstadoReclamacionController extends Controller
      */
     public function destroy(EstadoReclamacion $estadoReclamacion)
     {
-        //
+        $estadoReclamacion->delete();
+        return redirect('estadoReclamacion');
     }
 }

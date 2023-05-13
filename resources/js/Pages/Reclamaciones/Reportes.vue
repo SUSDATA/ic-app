@@ -108,7 +108,6 @@ buttons2.value = [
 //******* Lifecycle Hooks *********//
 onMounted(() => {
   console.log("Component was mounted: ",report);
-  //el.value // <div>
 })
 
 </script>

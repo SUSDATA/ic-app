@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ReclamacionSegmento;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,7 +22,6 @@ class Reclamacion extends Model
     protected $table = 'reclamaciones';
 	
 	protected $fillable = [
-        'code',
         'segmento',
         'operacion',
         'fecha',
@@ -33,18 +33,17 @@ class Reclamacion extends Model
         'ruta_archivo_adjunto',
 		'aplica_min',
 		'min',
-		'tipo',
-		'mes_reclamacion',
-		'anio_reclamacion',
-		'estado_id',
-		'consultor_id',
-		'resolutor_id',
+		'consultor_id',		
 		'motivo_id',
 		'servicio_id',
 		'red_id'
     ];
 
 	
+	protected $casts = [
+		'segmento' => ReclamacionSegmento::class
+	];
+
 	/**
 	* Usuarios relacionados en una Reclamación.
 	*/

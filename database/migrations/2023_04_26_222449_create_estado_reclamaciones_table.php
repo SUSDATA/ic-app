@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('estado_reclamaciones', function (Blueprint $table) {
             $table->id();
-			$table->string('nombre',100)->unique(); 
+			$table->string('nombre',100)->unique();
+            $table->string('nombre_a_mostrar',100); 
 			$table->string('descripcion',400)->nullable();
 			$table->string('usuario_creacion', 80)->nullable();
             $table->string('usuario_modificacion', 80)->nullable();

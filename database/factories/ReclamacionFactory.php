@@ -32,7 +32,7 @@ class ReclamacionFactory extends Factory
 			'tipo' => $this->faker->randomElement(['DIGITADA', 'INSTALADA']),
 			'mes_reclamacion' => $this->faker->monthName(),
 			'anio_reclamacion' => $this->faker->year(),
-			'estado_id' => $this->faker->numberBetween(1,4),
+			'estado_id' => $this->faker->numberBetween(1,3),
 			'consultor_id' => $this->faker->numberBetween(1,4),
 			'resolutor_id' => $this->faker->numberBetween(1,4),
 			'motivo_id' => $this->faker->numberBetween(1,4),

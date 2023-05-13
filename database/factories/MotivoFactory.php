@@ -18,6 +18,7 @@ class MotivoFactory extends Factory
     {
         return [
             'nombre' => $this->faker->unique()->word,
+            'nombre_a_mostrar' => $this->faker->unique()->word,
 			'descripcion' => $this->faker->paragraph,			
 			'usuario_creacion' => $this->faker->name,
 			'usuario_modificacion' => $this->faker->name,

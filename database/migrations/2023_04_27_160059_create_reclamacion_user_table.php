@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('reclamacion_user', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();			
+            $table->timestamps();
+            $table->softDeletes();			
         });
     }
 

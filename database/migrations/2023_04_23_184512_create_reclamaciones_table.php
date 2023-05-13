@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('reclamaciones', function (Blueprint $table) {
             $table->id();
 			$table->string('code',100)->unique();
-			$table->string('segmento',80)->defalut('Negocios'); // posible values for creating "Enum Model Attribute Casting" (Empresas Grandes, Empresas Estrategicas, Negocios)
-			$table->string('operacion',80)->default('Fijo'); // posible values for creating "Enum Model Attribute Casting" (Fijo, Movil)
+			$table->string('segmento',100); // "Enum Model Attribute Casting" (Empresas Grandes, Empresas Estrategicas, Negocios) needs to be validated and required 
+			$table->string('operacion',100); // "Enum Model Attribute Casting" (Fijo, Movil) needs to be validated and required 
 			$table->timestamp('fecha')->nullable(); // fecha del requerimiento de la reclamacion
 			$table->string('nit_rut',255)->nullable();
 			$table->string('razon_social',100)->nullable();
@@ -25,7 +25,7 @@ return new class extends Migration
 			$table->string('ruta_archivo_adjunto',1024)->nullable();
 			$table->boolean('aplica_min')->nullable();
 			$table->string('min', 20)->nullable();
-			$table->string('tipo', 50)->nullable();
+			$table->string('tipo', 100)->nullable();
 			$table->string('mes_reclamacion', 10)->nullable();
 			$table->integer('anio_reclamacion')->nullable();
 			$table->timestamps();

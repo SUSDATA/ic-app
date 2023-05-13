@@ -53,6 +53,21 @@ const showingNavigationDropdown = ref(false);
                                     Motivos
                                 </NavLink>
                             </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('estadoReclamacion.index')" :active="route().current('estadoReclamacion.index')">
+                                    Estados
+                                </NavLink>
+                            </div>
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('red.index')" :active="route().current('red.index')">
+                                    Red
+                                </NavLink>
+                            </div>
+                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('servicio.index')" :active="route().current('servicio.index')">
+                                    Servicio
+                                </NavLink>
+                            </div>
                         </div>
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             <!-- Settings Dropdown -->

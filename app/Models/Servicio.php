@@ -27,6 +27,7 @@ class Servicio extends Model
      */
     protected $fillable = [
         'nombre',
+        'nombre_a_mostrar',
         'descripcion',
         'usuario_creacion',
 		'usuario_modificacion'
