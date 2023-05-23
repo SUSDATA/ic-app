@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Models\Reclamacion; 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -32,10 +33,12 @@ Route::get('/', function () {
 });
 
 Route::get('/test', function () {     
-    return Reclamacion::first()->segmento->value;  
-    /*return Inertia::render('Test',[
-            'currentUser' => Auth::user(),            
-        ]);*/
+
+    //$segmentos = ReclamacionSegmento::cases();
+    //return Reclamacion::first()->segmento; 
+    return Inertia::render('Test',[
+            'currentUser' => Auth::user()            
+        ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/dashboard', function () {    
@@ -52,7 +55,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('estadoReclamacion', EstadoReclamacionController::class);
     Route::resource('red', RedController::class);
     Route::resource('servicio', ServicioController::class);
-	Route::get('graficas', [ReclamacionController::class,'reclamacionesPorUsuario'])->name('graficas');
+	Route::get('createMasiva', [ReclamacionController::class,'createMasiva'])->name('reclamaciones.masiva');
+    Route::get('graficas', [ReclamacionController::class,'reclamacionesPorUsuario'])->name('graficas');
 	Route::get('reportes', [ReclamacionController::class,'reportes'])->name('reportes');
 	
 });

@@ -20,8 +20,8 @@ return new class extends Migration
 			$table->string('nit_rut',255)->nullable();
 			$table->string('razon_social',100)->nullable();
 			$table->decimal('valor_a_reclamar', 14, 2)->default(0.00)->nullable(); //Con 14 de precision, se pueden representar montos en billones de unidades
-			$table->integer('id_venta')->nullable();
-			$table->integer('ot')->nullable();
+			$table->string('id_venta')->nullable();
+			$table->string('ot')->nullable();
 			$table->string('ruta_archivo_adjunto',1024)->nullable();
 			$table->boolean('aplica_min')->nullable();
 			$table->string('min', 20)->nullable();

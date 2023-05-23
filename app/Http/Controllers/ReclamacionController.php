@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Reclamacion;
 use App\Models\Motivo;
+use App\Models\Servicio;
+use App\Models\Red;
+use App\Enums\ReclamacionSegmento;
+use App\Enums\ReclamacionOperacion;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use DB;
+use Auth;
 
 class ReclamacionController extends Controller
 {
@@ -15,13 +20,13 @@ class ReclamacionController extends Controller
      */
     public function index(){
 
-        $reclamaciones = Reclamacion::select('reclamaciones.id', 'code','segmento','operacion','motivo_id','motivos.nombre as motivo')
+        $reclamaciones = Reclamacion::select('reclamaciones.id', 'code','segmento','operacion','motivo_id','motivos.nombre_a_mostrar as motivo')
 		->join('motivos','motivos.id','=','reclamaciones.motivo_id')->paginate(25);
 		        
         //$reclamaciones = Reclamacion::paginate(2);
-        //dd($reclamaciones->perPage());        
-		$motivos = Motivo::all(); 
-		//dd($motivos);
+        $motivos = Motivo::all(); 		
+
+        //dd($motivos);
         return Inertia::render('Reclamaciones/Index',[
 			'reclamaciones' => $reclamaciones,
 			'motivos' => $motivos,
@@ -33,20 +38,42 @@ class ReclamacionController extends Controller
      * Show the form for creating a new resource.
      */
     public function create(){
-         return Inertia::render('Reclamaciones/Create');
+
+        $motivos = Motivo::all();
+        $servicios = Servicio::all();
+        $redes = Red::all();
+        $segmentos = ReclamacionSegmento::getAllValues();        
+        $operaciones = ReclamacionOperacion::getAllValues();
+        
+        return Inertia::render('Reclamaciones/Create',[            
+            'motivos' => $motivos,
+            'servicios' => $servicios,
+            'redes' => $redes,
+            'segmentos' => $segmentos,
+            'operaciones' => $operaciones,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $request->validate([
-			'code' => 'required|max:100',
-			'motivo_id' => 'required|numeric'
+    {                      
+        $request->validate([			
+            'segmento' => 'required',
+            'operacion' => 'required',
+			'motivo_id' => 'required|numeric',
+            'servicio_id' => 'required|numeric',
+            'red_id' => 'required|numeric'
 		]);
-		$reclamacion = new Reclamacion($request->input());
-		$reclamacion->save();
+
+        $input = $request->all();   
+        $input['code'] = uniqid();
+        $input['comercial_id'] = Auth::id();
+        //dd($input);
+		$reclamacion = new Reclamacion($input);
+	
+        $reclamacion->save();
 		return redirect('reclamaciones');
     }
 
@@ -71,9 +98,12 @@ class ReclamacionController extends Controller
      */
     public function update(Request $request, Reclamacion $reclamacione)
     {
-        $request->validate([
-			'code' => 'required|max:100',
-			'motivo_id' => 'required|numeric'
+        $request->validate([			
+            'segmento' => 'required',
+            'operacion' => 'required',
+			'motivo_id' => 'required|numeric',
+            'servicio_id' => 'required|numeric',
+            'red_id' => 'required|numeric'
 		]);
 		$reclamacione->update($request->input());
 		return redirect('reclamaciones');
@@ -90,6 +120,15 @@ class ReclamacionController extends Controller
 	
 	/***** custom added functions *****/
 	
+    /**
+     * .
+     */
+    public function createMasiva()
+    {
+        
+        return Inertia::render('Reclamaciones/Masiva');     
+    }
+
 	/**
      * .
      */

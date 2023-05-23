@@ -15,7 +15,7 @@ return new class extends Migration
 		Schema::table('reclamaciones', function (Blueprint $table) {
 			$table->foreignId('estado_id')->default(1) // estado foreign key
 			->constrained('estado_reclamaciones'); 
-			$table->foreignId('consultor_id')->default(1) // user foreign key
+			$table->foreignId('comercial_id')->default(1) // user foreign key
 			->constrained('users');			
 			$table->foreignId('resolutor_id')->default(1)  // user foreign key
 			->constrained('users');

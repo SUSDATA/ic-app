@@ -110,6 +110,7 @@ const deleteReclamacion = (id,name) => {
 //******* Lifecycle Hooks *********//
 onMounted(() => {
   console.log("Component was mounted: ",props.reclamaciones.data);
+  console.log("Motivos: ",props.motivos);
 })
 
 
@@ -126,20 +127,30 @@ onMounted(() => {
 
         <div class="py-12">
             <div class="mx-auto sm:px-6 lg:px-8">            
-                <div class="px-6 py-6 bg-white overflow-hidden shadow-sm sm:rounded-lg text-gray-800">
-                    <div class="mt-3 mb-3 flex">
+                <div class="px-6 py-6 bg-white overflow-hidden shadow-sm sm:rounded-lg text-gray-800 flex">
+                    <div class="mt-3 mb-3 mr-3 flex">
                         <Link 
                             :href="route('reclamaciones.create')" 
                             :class="'px-4 py-2 bg-green-800 text-white border rounded-md font-semibold text-xs'"
                         >
-                            <i class="fa-solid fa-plus-circle"></i> Crear Reclamación
+                            <i class="fa-solid fa-plus-circle px-1"></i> Crear Reclamación
                         </Link>                 
-                    </div>
+                    </div>                  
+                     <div class="mt-3 mb-3 flex">
+                        <Link 
+                            :href="route('reclamaciones.masiva')" 
+                            :class="'px-4 py-2 bg-green-800 text-white border rounded-md font-semibold text-xs'"
+                        >
+                                <i class="fa-solid fa fa-upload px-1"></i> Carga Masiva
+                        </Link>                 
+                    </div>                       
+                    <!--
                     <div class="mt-3 mb-3 flex"> 
                         <PrimaryButton @click="$event => openModal(1)" class="px-4 py-2 bg-green-800 text-white border rounded-md font-semibold text-xs">
-                            <i class="fa-solid fa-plus-circle"></i> Crear Reclamación
+                            <i class="fa-solid fa-plus-circle"></i> Carga masiva
                        </PrimaryButton>                   
                     </div>
+                    -->
                 </div>
                 <div class="px-6 py-6 bg-white overflow-hidden shadow-sm sm:rounded-lg text-gray-800">
                     <table class="table-auto border border-gray-400 w-full">

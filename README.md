@@ -36,6 +36,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 - FontAwesome
 - Sweetalert2 
 - Tailwind
+- Flatpickr(Datepicker) https://flatpickr.js.org/getting-started/
 - ChartJS (Vue Package)
 - DataTable (datatables.net-vue3 Package)
 
