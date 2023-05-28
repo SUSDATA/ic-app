@@ -20,9 +20,27 @@ class ReclamacionController extends Controller
      */
     public function index(){
 
+
+        /*$reclamaciones = Reclamacion::select(
+            'reclamaciones.id as reclamacion_id', 
+            'code',
+            'segmento',
+            'operacion',
+            'motivo_id',
+            'motivos.nombre_a_mostrar as motivo'
+        )
+        ->join('motivos','motivos.id','=','reclamaciones.motivo_id')->get();
+
+        return Inertia::render('Reclamaciones/IndexDatatable',[
+            'reclamaciones' => $reclamaciones
+        ]);
+        */
+        
+
         $reclamaciones = Reclamacion::select('reclamaciones.id', 'code','segmento','operacion','motivo_id','motivos.nombre_a_mostrar as motivo')
 		->join('motivos','motivos.id','=','reclamaciones.motivo_id')->paginate(25);
-		        
+		
+
         //$reclamaciones = Reclamacion::paginate(2);
         $motivos = Motivo::all(); 		
 
@@ -31,7 +49,9 @@ class ReclamacionController extends Controller
 			'reclamaciones' => $reclamaciones,
 			'motivos' => $motivos,
             'perPagePagination' => $reclamaciones->perPage()
-		]);        
+		])
+
+        ;        
     }
 
     /**
@@ -126,7 +146,7 @@ class ReclamacionController extends Controller
     public function createMasiva()
     {
         
-        return Inertia::render('Reclamaciones/Masiva');     
+        return Inertia::render('Reclamaciones/CreateMasiva');     
     }
 
 	/**
@@ -156,5 +176,7 @@ class ReclamacionController extends Controller
 			'motivos' => $motivos
 		]);
     }
+
+
 	
 }

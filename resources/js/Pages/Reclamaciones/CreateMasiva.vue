@@ -32,7 +32,7 @@ onMounted(() => {
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="p-4 bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <form @submit.prevent="$event => form.post(route('reclamaciones.store'))"
+                    <form @submit.prevent="$event => form.post(route('reclamaciones.store'))"   
                         class="mt-6 space-y-2 flex flex-wrap">   
                             <div class="w-full flex justify-center px-1 py-12">
                                 <PrimaryButton :disabled="form.processing">
