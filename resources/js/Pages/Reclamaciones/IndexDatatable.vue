@@ -39,6 +39,7 @@ const props = defineProps({
 const test = () => {
   console.log("goes testing");
 }
+test();
 
 const edititem = function() {
   console.log("goes edititem");
@@ -59,7 +60,6 @@ const buttons2 = ref([]);
     }
 ]);
 */
-
 columns1.value = [
     {
         data:null,
@@ -71,7 +71,7 @@ columns1.value = [
     {data: 'motivo'},
     {data: null,
         render: function ( data, type, row ) {
-            return '<a class="px-4 py-2 bg-yellow-800 text-white border rounded-md font-semibold text-xs" href='+route('reclamaciones.edit',data.reclamacion_id)+'><i class="fa-solid fa-edit"></i></a><a class="px-4 py-2 bg-red-800 text-white border rounded-md font-semibold text-xs" href='+route('reclamaciones.destroy',data.reclamacion_id)+'><i class="fa-solid fa-trash"></i></a>';
+            return '<a id="editbtn" class="px-4 py-2 bg-yellow-800 text-white border rounded-md font-semibold text-xs" href='+route('reclamaciones.edit',data.reclamacion_id)+'><i class="fa-solid fa-edit"></i></a><a class="px-4 py-2 bg-red-800 text-white border rounded-md font-semibold text-xs" href='+route('reclamaciones.destroy',data.reclamacion_id)+'><i class="fa-solid fa-trash"></i></a>';
             //return  '<button @click="test()" class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150">Editar</button>'// ' <i class="fa-solid fa-edit"></i>'            //return '$'+data.reclamacion_id;
         },
         orderable:false
@@ -105,7 +105,12 @@ buttons1.value = [
 onMounted(() => {
   console.log("Component was mounted");
   console.log("reclamaciones object: ",props.reclamaciones );
+
+
+console.log("ending mounted");
 })
+
+
 
 </script>
 

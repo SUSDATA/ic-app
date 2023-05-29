@@ -18,8 +18,8 @@ class ReclamacionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(){
-
+    public function index(Request $request){
+        //dd($request->all());
 
         /*$reclamaciones = Reclamacion::select(
             'reclamaciones.id as reclamacion_id', 
@@ -36,22 +36,19 @@ class ReclamacionController extends Controller
         ]);
         */
         
-
+        
         $reclamaciones = Reclamacion::select('reclamaciones.id', 'code','segmento','operacion','motivo_id','motivos.nombre_a_mostrar as motivo')
-		->join('motivos','motivos.id','=','reclamaciones.motivo_id')->paginate(25);
-		
+		->join('motivos','motivos.id','=','reclamaciones.motivo_id')->paginate(20);	
 
         //$reclamaciones = Reclamacion::paginate(2);
         $motivos = Motivo::all(); 		
 
-        //dd($motivos);
+        //dd($reclamaciones);
         return Inertia::render('Reclamaciones/Index',[
 			'reclamaciones' => $reclamaciones,
 			'motivos' => $motivos,
             'perPagePagination' => $reclamaciones->perPage()
-		])
-
-        ;        
+		]);      
     }
 
     /**
@@ -118,14 +115,13 @@ class ReclamacionController extends Controller
      */
     public function update(Request $request, Reclamacion $reclamacione)
     {
+        //dd($request->all());
         $request->validate([			
             'segmento' => 'required',
             'operacion' => 'required',
-			'motivo_id' => 'required|numeric',
-            'servicio_id' => 'required|numeric',
-            'red_id' => 'required|numeric'
+			'motivo_id' => 'required|numeric',            
 		]);
-		$reclamacione->update($request->input());
+		$reclamacione->update($request->input());         
 		return redirect('reclamaciones');
     }
 

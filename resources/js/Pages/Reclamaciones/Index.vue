@@ -14,13 +14,52 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import { nextTick,ref,onMounted } from 'vue';
 import Swal from 'sweetalert2';
 import VueTailwindPagination from '@ocrv/vue-tailwind-pagination';
+import Button from 'primevue/button';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import ColumnGroup from 'primevue/columngroup';   // optional
+import Row from 'primevue/row';  
+import Paginator from 'primevue/paginator';
+import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
 const codeInput = ref(null);
 const modal = ref(false);
 const title = ref('');
 const operation = ref(1);
 const id = ref('');
+const products = ref();
+const offset = ref(props.reclamaciones.per_page * props.reclamaciones.current_page - props.reclamaciones.per_page);
+const filters = ref();
 
+
+const columns = [
+    { field: 'code', header: 'Code' },
+    { field: 'segmento', header: 'Segmento' },
+    { field: 'operacion', header: 'Operacion' },
+    { field: 'motivo', header: 'Motivo' }
+];
+
+// Custom functions
+
+const onPaginatePrimeVue = (e) => {
+    console.log("paginating with PrimeVue",e);    
+    formPage.get(route('reclamaciones.index',{page:e.page+1}));
+    //offset.value = e.rows * e.page;
+};
+
+const test = (e) => {
+    console.log("Testing Emit Events with PrimeVue",e);        
+};
+
+const initFilters = () => {
+    filters.value = {
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS }        
+    };
+};
+
+initFilters();
+
+//
 const props = defineProps({
     reclamaciones: {type:Object},
     motivos: {type:Object},
@@ -89,7 +128,7 @@ const ok = (msj) => {
 
 const formPage = useForm({});
 
-const deleteReclamacion = (id,name) => {
+const deleteReclamacion = (id,name) => {    
         const alerta = Swal.mixin({
             buttonsStyling: true
         });
@@ -102,7 +141,10 @@ const deleteReclamacion = (id,name) => {
         }).then((result) => {
             if(result.isConfirmed){
                 form.delete(route('reclamaciones.destroy',id),{
-                    onSuccess: () => ok('Reclamacion eliminada!')
+                    onSuccess: () => {
+                        products.value = props.reclamaciones.data;
+                        ok('Reclamacion eliminada!');
+                    }
                 });
             }
         });
@@ -110,7 +152,10 @@ const deleteReclamacion = (id,name) => {
 //******* Lifecycle Hooks *********//
 onMounted(() => {
   console.log("Component was mounted: ",props.reclamaciones.data);
+  console.log("Component was mounted: ",props.reclamaciones);
   console.log("Motivos: ",props.motivos);
+  products.value = props.reclamaciones.data;
+  console.log("offset: ",offset.value);
 })
 
 
@@ -124,7 +169,7 @@ onMounted(() => {
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Reclamaciones</h2>
         </template>
-
+        <!--<div><Button label="Click To Get Started" icon="pi pi-check" iconPos="right"/></div>-->
         <div class="py-12">
             <div class="mx-auto sm:px-6 lg:px-8">            
                 <div class="px-6 py-6 bg-white overflow-hidden shadow-sm sm:rounded-lg text-gray-800 flex">
@@ -152,6 +197,54 @@ onMounted(() => {
                     </div>
                     -->
                 </div>
+                <!-- VUE PRIME -->
+                <div id="primevue">
+                   
+                    <DataTable 
+                        :value="products"
+                        dataKey="id"
+                        lazy                        
+                        @page="test"
+                        @filter="test"
+                        v-model:filters="filters"
+                        tableStyle="max-width:100%;margin:auto;"
+                    >
+                        <template #header>
+                              <div class="flex justify-content-between">                                
+                                <!--<span class="p-input-icon-left">                                    
+                                    <TextInput v-model="filters['global'].value" placeholder="Buscar..." />
+                                </span>
+                                <button>buscar</button>-->
+                            </div>
+                        </template>
+                        <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header"></Column>
+                        
+                        <Column field="accion" header="">
+                             <template #body="slotProps">
+                              <WarningButton @click="$event => openModal(2,slotProps.data.code,slotProps.data.segmento,slotProps.data.operacion,slotProps.data.motivo_id,slotProps.data.id)">
+                                    <i class="fa-solid fa-edit"></i>
+                                </WarningButton>
+                            </template>
+                          </Column>                     
+                          <Column field="accion" header="">
+                            <template #body="slotProps">
+                                <DangerButton @click="$event => deleteReclamacion(slotProps.data.id,slotProps.data.code)">
+                                    <i class="fa-solid fa-trash"></i> 
+                                </DangerButton>                         
+                            </template>
+                            
+                          </Column>                     
+                    </DataTable>
+                     <Paginator
+                        :rows="reclamaciones.per_page"                        
+                        @page="onPaginatePrimeVue"
+                        :totalRecords="reclamaciones.total"                    
+                        :alwaysShow="false"
+                        v-model:first="offset"
+                      /> 
+                </div>
+                <!-- END VUE PRIME -->
+                <!--
                 <div class="px-6 py-6 bg-white overflow-hidden shadow-sm sm:rounded-lg text-gray-800">
                     <table class="table-auto border border-gray-400 w-full">
                     <thead>
@@ -185,7 +278,7 @@ onMounted(() => {
                         </tr>
                     </tbody>
                     </table>
-                </div>
+                </div> 
                 <div class="bg-white grid v-screen place-items-center">                
                     <VueTailwindPagination                    
                         :current="reclamaciones.currentPage" 
@@ -193,7 +286,8 @@ onMounted(() => {
                         :per-page="reclamaciones.data.length"
                         @page-changed="$event => onPageClick($event)"
                     ></VueTailwindPagination>                
-                </div>                
+                </div>
+                -->                
             </div>
         </div>
         <Modal 
