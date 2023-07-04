@@ -19,9 +19,10 @@ class ReclamacionController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request){
+        
         //dd($request->all());
-
-        /*$reclamaciones = Reclamacion::select(
+        /*
+        $reclamaciones = Reclamacion::select(
             'reclamaciones.id as reclamacion_id', 
             'code',
             'segmento',
@@ -36,19 +37,27 @@ class ReclamacionController extends Controller
         ]);
         */
         
-        
-        $reclamaciones = Reclamacion::select('reclamaciones.id', 'code','segmento','operacion','motivo_id','motivos.nombre_a_mostrar as motivo')
-		->join('motivos','motivos.id','=','reclamaciones.motivo_id')->paginate(20);	
+        $reclamaciones = Reclamacion::select('reclamaciones.id', 'code','segmento','operacion','motivo_id','motivos.nombre_a_mostrar as motivo','fecha')
+		->join('motivos','motivos.id','=','reclamaciones.motivo_id')->paginate(10);	
 
         //$reclamaciones = Reclamacion::paginate(2);
         $motivos = Motivo::all(); 		
 
         //dd($reclamaciones);
+/*
+        return Inertia::render('Test',[
+                'currentUser' => Auth::user(),
+                'reclamaciones' => $reclamaciones,
+                'motivos' => $motivos
+        ]);
+        */ 
+
         return Inertia::render('Reclamaciones/Index',[
 			'reclamaciones' => $reclamaciones,
 			'motivos' => $motivos,
             'perPagePagination' => $reclamaciones->perPage()
-		]);      
+		]);
+
     }
 
     /**

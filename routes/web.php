@@ -36,10 +36,12 @@ Route::get('/test', function () {
 
     //$segmentos = ReclamacionSegmento::cases();
     //return Reclamacion::first()->segmento; 
+
     return Inertia::render('Test',[
-            'currentUser' => Auth::user()            
-        ]);
-})->middleware(['auth', 'verified'])->name('dashboard');
+            'currentUser' => Auth::user()
+    ]);
+
+})->middleware(['auth', 'verified'])->name('test');
 
 Route::get('/dashboard', function () {    
     return Inertia::render('Dashboard');

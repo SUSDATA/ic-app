@@ -15,21 +15,32 @@ import { nextTick,ref,onMounted } from 'vue';
 import Swal from 'sweetalert2';
 import VueTailwindPagination from '@ocrv/vue-tailwind-pagination';
 import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';   // optional
 import Row from 'primevue/row';  
 import Paginator from 'primevue/paginator';
-import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import { FilterMatchMode } from 'primevue/api';
 
 const codeInput = ref(null);
 const modal = ref(false);
 const title = ref('');
 const operation = ref(1);
 const id = ref('');
-const products = ref();
+const reclamacionesObj = ref();
+const paginatorPerPage = ref();
+const paginatorTotal = ref();
 const offset = ref(props.reclamaciones.per_page * props.reclamaciones.current_page - props.reclamaciones.per_page);
-const filters = ref();
+
+const filters = ref({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    codigo: { value: null, matchMode: FilterMatchMode.CONTAINS },    
+    operacion: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    segmento: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    motivo: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    'country.name': { value: null, matchMode: FilterMatchMode.STARTS_WITH }
+});
 
 
 const columns = [
@@ -50,14 +61,6 @@ const onPaginatePrimeVue = (e) => {
 const test = (e) => {
     console.log("Testing Emit Events with PrimeVue",e);        
 };
-
-const initFilters = () => {
-    filters.value = {
-        global: { value: null, matchMode: FilterMatchMode.CONTAINS }        
-    };
-};
-
-initFilters();
 
 //
 const props = defineProps({
@@ -149,14 +152,22 @@ const deleteReclamacion = (id,name) => {
             }
         });
 }
+
+
 //******* Lifecycle Hooks *********//
 onMounted(() => {
+  reclamacionesObj.value = props.reclamaciones.data;
+  paginatorPerPage.value = props.reclamaciones.per_page;
+  paginatorTotal.value = props.reclamaciones.total;
   console.log("Component was mounted: ",props.reclamaciones.data);
   console.log("Component was mounted: ",props.reclamaciones);
   console.log("Motivos: ",props.motivos);
-  products.value = props.reclamaciones.data;
+  console.log("Filtros: ",filters);  
+  console.log("Reclamaciones: ",reclamacionesObj.value);  
+  console.log("Pagination Info: ",props.reclamaciones.per_page);  
   console.log("offset: ",offset.value);
 })
+
 
 
 </script>
@@ -171,7 +182,8 @@ onMounted(() => {
         </template>
         <!--<div><Button label="Click To Get Started" icon="pi pi-check" iconPos="right"/></div>-->
         <div class="py-12">
-            <div class="mx-auto sm:px-6 lg:px-8">            
+            <div class="mx-auto sm:px-6 lg:px-8"> 
+
                 <div class="px-6 py-6 bg-white overflow-hidden shadow-sm sm:rounded-lg text-gray-800 flex">
                     <div class="mt-3 mb-3 mr-3 flex">
                         <Link 
@@ -198,25 +210,101 @@ onMounted(() => {
                     -->
                 </div>
                 <!-- VUE PRIME -->
+                 <div class="card">
+                    <DataTable 
+                        v-model:filters="filters" 
+                        :value="reclamacionesObj"                         
+                        dataKey="id" 
+                        filterDisplay="row" 
+                        :globalFilterFields="['code','operacion','segmento','motivo']">
+                        <template #header>
+                            <div class="flex justify-end">
+                                <span class="p-input-icon-left">
+                                    <i class="pi pi-search" />
+                                    <InputText v-model="filters['global'].value" placeholder="Buscar" />
+                                </span>
+                            </div>
+                        </template>
+
+                        <template #empty> No existen reclamaciones en la busqueda. </template>
+                                    
+                                   
+                        <Column header="Codigo" filterField="codigo" :showFilterMenu="false" :filterMenuStyle="{ width: '14rem' }" style="min-width: 14rem">
+                            <template #body="{ data }">
+                                <div class="flex align-items-center gap-2">                        
+                                    <span>{{ data.code }}</span>
+                                </div>
+                            </template>                
+                        </Column>        
+                        <Column header="Operación" filterField="operacion" :showFilterMenu="false" :filterMenuStyle="{ width: '14rem' }" style="min-width: 14rem">
+                            <template #body="{ data }">
+                                <div class="flex align-items-center gap-2">                        
+                                    <span>{{ data.operacion }}</span>
+                                </div>
+                            </template>                
+                        </Column>        
+
+                        <Column header="Segmento" filterField="segmento" :showFilterMenu="false" :filterMenuStyle="{ width: '14rem' }" style="min-width: 14rem">
+                            <template #body="{ data }">
+                                <div class="flex align-items-center gap-2">                        
+                                    <span>{{ data.segmento }}</span>
+                                </div>
+                            </template>                
+                        </Column> 
+
+                        <Column header="Motivo" filterField="motivo" :showFilterMenu="false" :filterMenuStyle="{ width: '14rem' }" style="min-width: 14rem">
+                            <template #body="{ data }">
+                                <div class="flex align-items-center gap-2">                        
+                                    <span>{{ data.motivo }}</span>
+                                </div>
+                            </template>                
+                        </Column>      
+
+                        <Column field="accion" header="">
+                             <template #body="slotProps">
+                              <WarningButton @click="$event => openModal(2,slotProps.data.code,slotProps.data.segmento,slotProps.data.operacion,slotProps.data.motivo_id,slotProps.data.id)">
+                                    <i class="fa-solid fa-edit"></i>
+                                </WarningButton>
+                            </template>
+                          </Column>  
+
+                          <Column field="accion" header="">
+                            <template #body="slotProps">
+                                <DangerButton @click="$event => deleteReclamacion(slotProps.data.id,slotProps.data.code)">
+                                    <i class="fa-solid fa-trash"></i> 
+                                </DangerButton>                         
+                            </template>
+                            
+                          </Column>    
+
+                    </DataTable>
+                    <Paginator
+                        :rows="paginatorPerPage"
+                        @page="onPaginatePrimeVue"
+                        :totalRecords="paginatorTotal"  
+                        :alwaysShow="false"
+                        v-model:first="offset"
+                      /> 
+                </div>
+                <!--
                 <div id="primevue">
                    
                     <DataTable 
                         :value="products"
                         dataKey="id"
-                        lazy                        
-                        @page="test"
-                        @filter="test"
-                        v-model:filters="filters"
+                        lazy                                           
+                        :filters="filters"
                         tableStyle="max-width:100%;margin:auto;"
                     >
                         <template #header>
-                              <div class="flex justify-content-between">                                
-                                <!--<span class="p-input-icon-left">                                    
-                                    <TextInput v-model="filters['global'].value" placeholder="Buscar..." />
+                            <div class="flex justify-end">
+                                <span class="p-input-icon-left">
+                                    <i class="pi pi-search" />
+                                    <InputText v-model="filters['global'].value" placeholder="Keyword Search" />
                                 </span>
-                                <button>buscar</button>-->
-                            </div>
-                        </template>
+                            </div> 
+                        </template>                        
+                        <Column :key="columns[0].field" :field="columns[0].field" :header="columns[0].header"></Column>
                         <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header"></Column>
                         
                         <Column field="accion" header="">
@@ -243,51 +331,8 @@ onMounted(() => {
                         v-model:first="offset"
                       /> 
                 </div>
-                <!-- END VUE PRIME -->
-                <!--
-                <div class="px-6 py-6 bg-white overflow-hidden shadow-sm sm:rounded-lg text-gray-800">
-                    <table class="table-auto border border-gray-400 w-full">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="px-2 py-2">#</th>
-                            <th class="px-2 py-2">Code</th>
-                            <th class="px-2 py-2">Segmento</th>
-                            <th class="px-2 py-2">Operación</th>
-                            <th class="px-2 py-2">Motivo</th>
-                            <th class="px-2 py-2"></th>
-                            <th class="px-2 py-2"></th>
-                        </tr>
-                    </thead>
-                    <tbody>                 
-                        <tr v-for="rec, i in reclamaciones.data" :key="rec.id">
-                            <td class="border border-gray-400 px-2 py-2">{{ i+1 }}</td>
-                            <td class="border border-gray-400 px-2 py-2">{{ rec.code }}</td>
-                            <td class="border border-gray-400 px-2 py-2">{{ rec.segmento }}</td>
-                            <td class="border border-gray-400 px-2 py-2">{{ rec.operacion }}</td>
-                            <td class="border border-gray-400 px-2 py-2">{{ rec.motivo }}</td>
-                            <td class="border border-gray-400 px-2 py-2">
-                                <WarningButton @click="$event => openModal(2,rec.code,rec.segmento,rec.operacion,rec.motivo_id,rec.id)">
-                                    <i class="fa-solid fa-edit"></i>
-                                </WarningButton>
-                            </td>               
-                            <td class="border border-gray-400 px-2 py-2">
-                                <DangerButton @click="$event => deleteReclamacion(rec.id,rec.code)">
-                                    <i class="fa-solid fa-trash"></i> 
-                                </DangerButton>
-                            </td>                       
-                        </tr>
-                    </tbody>
-                    </table>
-                </div> 
-                <div class="bg-white grid v-screen place-items-center">                
-                    <VueTailwindPagination                    
-                        :current="reclamaciones.currentPage" 
-                        :total="reclamaciones.total"      
-                        :per-page="reclamaciones.data.length"
-                        @page-changed="$event => onPageClick($event)"
-                    ></VueTailwindPagination>                
-                </div>
-                -->                
+                -->
+                <!-- END VUE PRIME -->                            
             </div>
         </div>
         <Modal 

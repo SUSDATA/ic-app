@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
 		//\App\Models\Motivo::factory(10)->create();		
         //\App\Models\EstadoReclamacion::factory(10)->create();        
 		\App\Models\User::factory(10)->create();      
-        \App\Models\Reclamacion::factory(30)->create();
+        \App\Models\Reclamacion::factory(1000)->create();
         
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',3
